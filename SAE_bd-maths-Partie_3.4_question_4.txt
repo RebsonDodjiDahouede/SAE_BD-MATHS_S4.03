@@ -1,0 +1,25 @@
+% Règles pour définir les étapes connectées par des trajets de randonnées ayant un nombre impair de tronçons.
+
+% Règle de base : Un trajet direct entre deux étapes a un nombre impair de tronçons s'il existe un tronçon direct entre elles.
+trajet_impair_direct(EtapeDepart, EtapeArrivee) :- 
+    Troncon(_, EtapeDepart, EtapeArrivee, _, _, _, _, _).
+
+% Règle de récursion : Un trajet a un nombre impair de tronçons s'il est composé d'un nombre pair de tronçons.
+% Cela signifie que si un trajet entre deux étapes a un nombre impair de tronçons, alors en ajoutant un tronçon direct supplémentaire, le nombre de tronçons deviendra pair.
+% Par conséquent, un trajet entre deux étapes a un nombre impair de tronçons si et seulement si le nombre de tronçons entre ces deux étapes est pair.
+trajet_impair(EtapeDepart, EtapeArrivee) :- 
+    not trajet_impair_direct(EtapeDepart, EtapeArrivee),
+    not trajet_impair_direct(EtapeArrivee, EtapeDepart),
+    Troncon(_, EtapeDepart, EtapeIntermediaire, _, _, _, _, _),
+    trajet_pair(EtapeIntermediaire, EtapeArrivee).
+
+% Règle de récursion : Un trajet a un nombre pair de tronçons.
+% Un trajet a un nombre pair de tronçons s'il est composé d'un nombre impair de tronçons.
+trajet_pair(EtapeDepart, EtapeArrivee) :- 
+    not trajet_pair_direct(EtapeDepart, EtapeArrivee),
+    not trajet_pair_direct(EtapeArrivee, EtapeDepart),
+    Troncon(_, EtapeDepart, EtapeIntermediaire, _, _, _, _, _),
+    trajet_impair(EtapeIntermediaire, EtapeArrivee).
+
+% Requête pour obtenir toutes les étapes connectées par des trajets de randonnées ayant un nombre impair de tronçons.
+?- trajet_impair(Etape1, Etape2).

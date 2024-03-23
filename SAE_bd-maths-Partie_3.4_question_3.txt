@@ -1,0 +1,15 @@
+% Règles pour définir les parcours qui passent uniquement par des tronçons en terre.
+
+% Règle de base : Un parcours direct est considéré comme uniquement en terre si le tronçon est en terre. L'attribut TypeSol doit valoir "Terre" pour pouvoir être pris en compte.
+parcours_terre_direct(EtapeDepart, EtapeArrivee) :- 
+    Troncon(TronconID, EtapeDepart, EtapeArrivee, _, 'terre', _, _, _).
+
+% Règle de récursion : Un parcours est considéré comme uniquement en terre s'il est composé uniquement de tronçons en terre.
+parcours_terre(EtapeDepart, EtapeArrivee) :- 
+    parcours_terre_direct(EtapeDepart, EtapeArrivee).
+parcours_terre(EtapeDepart, EtapeArrivee) :- 
+    parcours_terre_direct(EtapeDepart, EtapeIntermediaire),
+    parcours_terre(EtapeIntermediaire, EtapeArrivee).
+
+% Requête pour obtenir tous les parcours qui passent uniquement par des tronçons en terre.
+?- parcours_terre(EtapeDepart, EtapeArrivee).

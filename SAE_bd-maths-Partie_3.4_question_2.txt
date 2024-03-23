@@ -1,0 +1,16 @@
+% Règles pour définir les trajets de randonnées possibles entre les étapes.
+
+% Règle de base : Il existe un trajet direct entre deux étapes si elles sont reliées par un tronçon.
+possible_trajet_direct(EtapeDepart, EtapeArrivee) :- 
+    Troncon(TronconID, EtapeDepart, EtapeArrivee, _, _, _, _, _).
+
+% Règle de récursion : Il existe un trajet entre deux étapes si elles sont reliées par un tronçon direct 
+% ou s'il existe un trajet entre l'étape de départ et une étape intermédiaire, puis entre cette étape intermédiaire et l'étape d'arrivée.
+possible_trajet(EtapeDepart, EtapeArrivee) :- 
+    possible_trajet_direct(EtapeDepart, EtapeArrivee).
+possible_trajet(EtapeDepart, EtapeArrivee) :- 
+    possible_trajet_direct(EtapeDepart, EtapeIntermediaire),
+    possible_trajet(EtapeIntermediaire, EtapeArrivee).
+
+% Requête pour obtenir tous les trajets de randonnées possibles à partir d'une étape donnée.
+?- possible_trajet(EtapeDepart, EtapeArrivee).

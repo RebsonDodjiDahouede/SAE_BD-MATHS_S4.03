@@ -1,0 +1,16 @@
+% Règles pour définir les étapes connectées par des trajets correspondant à un circuit.
+
+% Règle de base : Un trajet direct entre deux étapes forme un circuit s'il existe un tronçon direct entre elles.
+trajet_circuit_direct(EtapeDepart, EtapeArrivee) :- 
+    Troncon(_, EtapeDepart, EtapeArrivee, _, _, _, _, _),
+    EtapeDepart = EtapeArrivee.
+
+% Règle de récursion : Un trajet forme un circuit s'il commence et finit à la même étape et s'il existe un autre trajet qui forme un circuit entre les étapes intermédiaires.
+trajet_circuit(EtapeDepart, EtapeArrivee) :- 
+    not trajet_circuit_direct(EtapeDepart, EtapeArrivee),
+    not trajet_circuit_direct(EtapeArrivee, EtapeDepart),
+    Troncon(_, EtapeDepart, EtapeIntermediaire, _, _, _, _, _),
+    trajet_circuit(EtapeIntermediaire, EtapeArrivee).
+
+% Requête pour obtenir toutes les étapes connectées par des trajets correspondant à un circuit.
+?- trajet_circuit(Etape, Etape).
