@@ -1,16 +1,12 @@
-% Règles pour définir les trajets de randonnées possibles entre les étapes.
+troncon(t1, orleans, blois, terre).
+troncon(t2, blois, tours, goudron).
+troncon(t3, blois, chartre, goudron).
+troncon(t4, tours, paris, terre).
+troncon(t5, tours, dunkerque, sable).
 
-% Règle de base : Il existe un trajet direct entre deux étapes si elles sont reliées par un tronçon.
-possible_trajet_direct(EtapeDepart, EtapeArrivee) :- 
-    Troncon(TronconID, EtapeDepart, EtapeArrivee, _, _, _, _, _).
 
-% Règle de récursion : Il existe un trajet entre deux étapes si elles sont reliées par un tronçon direct 
-% ou s'il existe un trajet entre l'étape de départ et une étape intermédiaire, puis entre cette étape intermédiaire et l'étape d'arrivée.
-possible_trajet(EtapeDepart, EtapeArrivee) :- 
-    possible_trajet_direct(EtapeDepart, EtapeArrivee).
-possible_trajet(EtapeDepart, EtapeArrivee) :- 
-    possible_trajet_direct(EtapeDepart, EtapeIntermediaire),
-    possible_trajet(EtapeIntermediaire, EtapeArrivee).
 
-% Requête pour obtenir tous les trajets de randonnées possibles à partir d'une étape donnée.
-?- possible_trajet(EtapeDepart, EtapeArrivee).
+chemin(X, Y) :- troncon(_, X, Y,_).
+chemin(X, Y) :- troncon(_, X, Z,_), chemin(Z, W), chemin(W, Y).
+
+chemin(orleans, Y)?
