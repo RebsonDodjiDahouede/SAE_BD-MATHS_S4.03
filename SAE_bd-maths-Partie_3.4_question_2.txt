@@ -6,6 +6,5 @@ troncon(t5, tours, dunkerque, sable).
 
 chemin(X, Y) :- troncon(_, X, Y, _).
 chemin(X, Z) :- troncon(_, X, Y, _), chemin(X, Y), chemin(Y, Z).
-chemin(X, Y) :- troncon(_, X, Z, _), chemin(Z, W), chemin(W, Y).
 
 chemin(orleans, Y)?
