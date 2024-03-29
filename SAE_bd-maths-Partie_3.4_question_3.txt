@@ -8,6 +8,5 @@ troncon(t7, tours, orleans, terre).
 
 chemin(X, Y) :- troncon(_, X, Y, terre).
 chemin(X, Z) :- troncon(_, X, Y, terre), chemin(X, Y), chemin(Y, Z).
-chemin(X, Y) :- troncon(_, X, Z, terre), chemin(Z, W), chemin(W, Y).
 
 chemin(orleans, Y)?
