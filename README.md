@@ -12,6 +12,33 @@
 ### Description
 
 Voici le script de création de la base de données :
+    Ce script combine le début de la première partie du sujet de la SAE contenant les tables Confort, Etape et Troncon.
+    Voici la description de la base de données:
+
+    Nous consid´erons une base de données simplifiée qui stocke des informations des
+    tronçons faisant partie des parcours de randonnée. Un tronçon a un identificateur
+    et est caractérisé par un point de d´epart et un point d’arrivée. Nous pouvons avoir
+    plusieurs tronçons différents entre un point de départ et un point d’arrivée. Pour
+    chaque tronçon, la base stocke, son nom usuel (s’il existe) ; la distance à parcourir,
+    en kilomètre ; le type de sol (terre, bitume, gravier, etc), la dénivelé moyenne entre
+    les points de départ et d’arrivée. Un point d’arrivée ou de départ est considéré
+    comme une étape. La base stocke des informations sur les étapes : codeEtape
+    (unique) nom de l’´etape (par exemple, Prati, L’Onda), latitude, longitude et
+    son niveau de confort. Le niveau de confort d’une étape est défini par un indice
+    de catégorie. Il existe 10 catégories de confort (pour indiquer, par exemple que
+    l’étape correspond à une ville, à un refuge, à un placement de camping, etc ). La
+    base stocke une description pour chaque catégorie.
+
+Le première partie du script correspond à la création du modèle objet-relationnel. 
+En effet, nous créons les deux types suivants:
+    PointsInteretTable & IndiceArray
+
+L'objet PointsInteret possède une simple fonction permettant de renvoyer son nom, l'objet IndiceQualite, lui, possède une fonction get_impact qui nous servira plus tard pour une requête.
+Le type PointsInteretTable est une table contenant différents PointsInteret et le type IndiceArray est un Array de plusieurs IndiceQualite.
+
+Une fois les types créés la table Troncon peut enfin les utiliser en tant que type pour ses deux attributs suivants : **pointInteret** et **indiceQualite**
+
+Enfin la commande `nested table pointsInteret store as pointsInteret_nt;` nous permet de créer en mémoire une table pointsinteret_nt directement accessible à laquelle l'utilisateur pourra faire des requêtes.
 
 ```oracle
 
@@ -74,6 +101,11 @@ CREATE TABLE Troncon (
     FOREIGN KEY (pointDepart) REFERENCES Etape(codeEtape),
     FOREIGN KEY (pointArrivee) REFERENCES Etape(codeEtape)
 ) nested table pointsInteret store as pointsInteret_nt;
+```
+### Jeu de données
+
+```oracle
+
 ```
 
 ### Requêtes partie 3.2
