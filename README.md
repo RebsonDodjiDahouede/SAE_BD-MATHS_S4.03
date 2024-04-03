@@ -304,6 +304,8 @@ WHERE e1.nomEtape = 'Orleans';
 **_Veuillez fournir la liste des étapes accessibles depuis Orléans, avec un nombre
 quelconque d’étapes intermédiaires._**
 
+_CTE_ : Common Table Expression
+
 `WITH Chemin(codeEtape, niveau) AS (...)` : C'est la déclaration de la CTE. Elle commence par le mot-clé WITH, suivi du nom de la CTE (Chemin) et des colonnes qu'elle va retourner (codeEtape et niveau). Dans cette partie, deux sous-requêtes sont unies à l'aide de UNION ALL.
 
 La première sous-requête : Elle sélectionne le point d'arrivée (pointArrivee) des tronçons partant d'Orléans. Elle attribue ces valeurs à codeEtape et initialise le niveau à 1.
