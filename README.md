@@ -304,6 +304,16 @@ WHERE e1.nomEtape = 'Orleans';
 **_Veuillez fournir la liste des étapes accessibles depuis Orléans, avec un nombre
 quelconque d’étapes intermédiaires._**
 
+`WITH Chemin(codeEtape, niveau) AS (...)` : C'est la déclaration de la CTE. Elle commence par le mot-clé WITH, suivi du nom de la CTE (Chemin) et des colonnes qu'elle va retourner (codeEtape et niveau). Dans cette partie, deux sous-requêtes sont unies à l'aide de UNION ALL.
+
+La première sous-requête : Elle sélectionne le point d'arrivée (pointArrivee) des tronçons partant d'Orléans. Elle attribue ces valeurs à codeEtape et initialise le niveau à 1.
+
+La deuxième sous-requête : Cette partie est récursive. Elle sélectionne le point d'arrivée des tronçons (pointArrivee) et incrémente le niveau de 1 pour chaque itération. Elle rejoint également la CTE elle-même (Chemin) pour obtenir les étapes précédentes dans le chemin.
+
+`SELECT DISTINCT e.nomEtape, c.niveau` : C'est la requête principale qui sélectionne les noms des étapes (nomEtape) et les niveaux correspondants à partir de la CTE (Chemin). La clause DISTINCT assure que chaque paire (nom d'étape, niveau) est unique.
+
+`JOIN Etape e ON c.codeEtape = e.codeEtape` : Cette partie de la requête joint la CTE (Chemin) avec la table Etape sur le champ codeEtape pour obtenir les noms des étapes correspondant aux codes d'étape générés dans la CTE.
+
 ```oracle
 WITH Chemin(codeEtape, niveau) AS (
     SELECT pointArrivee AS codeEtape, 1 AS niveau
@@ -318,9 +328,17 @@ SELECT DISTINCT e.nomEtape, c.niveau
 FROM Chemin c
 JOIN Etape e ON c.codeEtape = e.codeEtape;
 ```
+_En résumé, cette requête génère tous les chemins possibles à partir de la ville d'Orléans en suivant les tronçons successifs, en utilisant une CTE récursive pour itérer à travers les tronçons jusqu'à ce qu'il n'y ait plus de nouveaux tronçons à explorer._
 
 ### Requêtes partie 3.3
 
+**_Pour chaque tronçon, donner le nombre de points d’intérêt, par type._**
+
+`SELECT t.idTroncon, pi.type AS type_de_point, COUNT(*) AS nombre_de_points` : Cette partie spécifie les colonnes à sélectionner dans le résultat de la requête. t.idTroncon représente l'identifiant du tronçon. pi.type AS type_de_point renomme la colonne type de la table pointsInteret en type_de_point. COUNT(*) AS nombre_de_points calcule le nombre de lignes (points d'intérêt) pour chaque combinaison de idTroncon et type.
+
+`FROM Troncon t, TABLE(t.pointsInteret) pi` : Cette partie spécifie les tables à partir desquelles les données sont sélectionnées. Troncon t est la table principale. TABLE(t.pointsInteret) pi est une fonction de table qui transforme le type de collection pointsInteret de la table Troncon en lignes individuelles pouvant être utilisées dans une requête SQL.
+
+`GROUP BY t.idTroncon, pi.type` : Cette partie de la requête spécifie comment les résultats doivent être regroupés. Les résultats sont regroupés par idTroncon et type_de_point.
 ```oracle
 SELECT 
     t.idTroncon,
@@ -332,7 +350,14 @@ FROM
 GROUP BY 
     t.idTroncon, 
     pi.type;
+```
 
+**_L’impact d’un indice de qualité est donné par le produit de sa valeur et du poids
+que lui est attribué. Pour chaque tronçon, indiquer l’impact de chaque indice de
+qualité._**
+
+**Ici nous pouvons voir que la fonction `get_impact` défini lors de la création de l'objet IndiceQualite est réutilisée ici dans l'intérêt de la requête ce qui la rend plus simple.**
+```
 SELECT 
     t.idTroncon,
     iq.Nom AS nom_indice,
