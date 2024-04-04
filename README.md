@@ -15,7 +15,7 @@ Voici le script de création de la base de données :
     Ce script combine le début de la première partie du sujet de la SAE contenant les tables Confort, Etape et Troncon.
     Voici la description de la base de données:
 
-    Nous consid´erons une base de données simplifiée qui stocke des informations des
+    Nous considérons une base de données simplifiée qui stocke des informations des
     tronçons faisant partie des parcours de randonnée. Un tronçon a un identificateur
     et est caractérisé par un point de d´epart et un point d’arrivée. Nous pouvons avoir
     plusieurs tronçons différents entre un point de départ et un point d’arrivée. Pour
@@ -436,7 +436,6 @@ troncon(t7, paris, marseille, terre).
 troncon(t7, marseille, nancy, terre).
 troncon(t8, nancy, neuneu, terre).
 troncon(t9, neuneu, erecup, terre).
-
 
 chemin1(X, Y) :- troncon(_, X, Y, _).
 chemin1(X,Z) :- troncon(_, X, Y, _), chemin2(Y, Z).
