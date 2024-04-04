@@ -375,7 +375,7 @@ FROM
 ## DATALOG
 
 
-### Requete 1
+### Requête chemin possible
 
 La requête 1 consiste à afficher les chemins possibles qui partent d'un point X et qui arrivent à un point Y, 
 peu importe le nombre de tronçons.
@@ -402,7 +402,7 @@ chemin(orleans,Y)?
 La requête 1 est donc une requête récursive qui permet de trouver tous les chemins possibles entre deux points X et Y.
 
 
-### Requete 2
+### Requete passage par terre
 
 La requête 2 consiste à faire afficher tous les chemins possibles entre deux points X et Y en ne passant que par des chemins de terre.
 
@@ -421,7 +421,9 @@ chemin(X, Y) :- troncon(_, X, Z, terre), chemin(Z, W), chemin(W, Y).
 ```
 
 
-### Query chemin impair
+### Datalog chemin impair
+
+Cette requête consiste à afficher les chemins possibles entre deux points X et Y en passant par un nombre impair de tronçons.
 
 ```datalog
 troncon(t1, orleans, blois, terre).
@@ -433,9 +435,7 @@ troncon(t6, blois, marseille, terre).
 troncon(t7, paris, marseille, terre).
 troncon(t7, marseille, nancy, terre).
 troncon(t8, nancy, neuneu, terre).
-troncon(t9, neuneu, prout, terre).
-
-
+troncon(t9, neuneu, erecup, terre).
 
 
 chemin1(X, Y) :- troncon(_, X, Y, _).
@@ -446,8 +446,32 @@ chemin2(X, Z) :- troncon(_, X, Y, _), chemin1(Y,Z).
 odd_chemin(X, Y) :- chemin1(X, Y).
 ```
 
+### Query
 
-### Query circuit
+```datalog
+odd_chemin(tours, Y)?
+```
+
+### Résultat
+
+```datalog
+odd_chemin(tours, dunkerque)
+odd_chemin(tours, erecup)
+odd_chemin(tours, nancy)
+odd_chemin(tours, paris)
+```
+
+### Explication
+
+C'est une requête récursive qui donc récupère tous les chemins entre X et Y si le nombre de tronçons empruntés est impair.
+On a ainsi tous les chemins directs entre tours et les autres villes, ici, c'est Paris et Dunkerque. 
+Et on doit ensuite rajouter les impairs.
+Donc on passe le chemin de Tours à Paris (on récupère), puis de Paris à Marseille (on ne récupère pas),
+ensuite de Marseille à Nancy (on récupère), ensuite de Nancy à Neuneu (on ne récupère pas) et enfin de Neuneu à EreCup (on récupère).
+
+### Datalog circuit
+
+Cette query permet de déterminer si une étape est dans un circuit.
 
 ```datalog
 troncon(t1, orleans, blois, terre).
@@ -467,6 +491,22 @@ chemin(X, Z) :- troncon(_, X, Y, _), chemin(Y, Z).
 
 circuit(X) :- chemin(X, Y), chemin(Y, X).
 ```
+
+### Query
+
+```datalog
+circuit(X)?
+```
+
+### Result
+
+```datalog
+circuit(blois)
+circuit(orleans)
+circuit(paris)
+circuit(tours)
+```
+
 
 
 
